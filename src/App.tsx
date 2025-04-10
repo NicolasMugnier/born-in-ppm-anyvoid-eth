@@ -1,35 +1,40 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from 'react';
+import './App.css';
+import data from './data.json';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const years: number[] = Array.from({ length: 2025 - 1959 + 1 }, (_, i) => 1959 + i);
+  const [selectedYear, setSelectedYear] = useState<number | null>(null);
+
+  // Find the data for the selected year
+  const selectedData = data.data.find((entry) => entry.year === selectedYear);
 
   return (
     <>
       <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <h2>Born in {selectedData ? selectedData.ppm : '...'} PPM</h2>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+
+      <select
+        onChange={(e) => setSelectedYear(Number(e.target.value))}
+        defaultValue=""
+      >
+        <option value="" disabled>
+          Select a year
+        </option>
+        {years.map((year) => (
+          <option key={year} value={year}>
+            {year}
+          </option>
+        ))}
+      </select>
+
+      {/* Metadata Section */}
+      <section>
+        <p><strong>Source:</strong> {data.metadata.citation}</p>
+      </section>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
